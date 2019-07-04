@@ -124,15 +124,20 @@ public class PropertyPlaceholderHelper {
 		return parseStringValue(value, placeholderResolver, new HashSet<>());
 	}
 
+	/**
+	 * 其实就是获取占位符 ${} 中间的值，这里面会涉及到一个递归的过程，因为可能会存在这种情况 ${${name}}。
+	 */
 	protected String parseStringValue(
 			String value, PlaceholderResolver placeholderResolver, Set<String> visitedPlaceholders) {
 
 		StringBuilder result = new StringBuilder(value);
-
+		// 获取前缀 "${" 的索引位置
 		int startIndex = value.indexOf(this.placeholderPrefix);
 		while (startIndex != -1) {
+			// 获取 后缀 "}" 的索引位置
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
+				// 截取 "${" 和 "}" 中间的内容，这也就是我们在配置文件中对应的值
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
 				String originalPlaceholder = placeholder;
 				if (!visitedPlaceholders.add(originalPlaceholder)) {
@@ -140,15 +145,24 @@ public class PropertyPlaceholderHelper {
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				// 解析占位符键中包含的占位符，真正的值
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
+				// 从 Properties 中获取 placeHolder 对应的值 propVal
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
+				// 如果不存在
 				if (propVal == null && this.valueSeparator != null) {
+					// 查询 : 的位置 （判断是否有默认值${xxx:default}）
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);
+					// 如果存在 :
 					if (separatorIndex != -1) {
+						// 获取 : 前面部分 actualPlaceholder
 						String actualPlaceholder = placeholder.substring(0, separatorIndex);
+						// 获取 : 后面部分 defaultValue
 						String defaultValue = placeholder.substring(separatorIndex + this.valueSeparator.length());
+						// 从 Properties 中获取 actualPlaceholder 对应的值
 						propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);
+						// 如果不存在 则返回 defaultValue
 						if (propVal == null) {
 							propVal = defaultValue;
 						}
@@ -157,6 +171,7 @@ public class PropertyPlaceholderHelper {
 				if (propVal != null) {
 					// Recursive invocation, parsing placeholders contained in the
 					// previously resolved placeholder value.
+					// 递归调用，解析先前解析的占位符值中包含的占位符。
 					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);
 					result.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);
 					if (logger.isTraceEnabled()) {
@@ -178,7 +193,7 @@ public class PropertyPlaceholderHelper {
 				startIndex = -1;
 			}
 		}
-
+		// 返回propVal，就是替换之后的值
 		return result.toString();
 	}
 

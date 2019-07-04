@@ -29,6 +29,9 @@ import org.springframework.lang.Nullable;
  * @since 3.0
  * @param <S> the source type
  * @param <T> the target type
+ *
+ *
+ * 将 S 类型对象转为 T 类型对象。
  */
 @FunctionalInterface
 public interface Converter<S, T> {

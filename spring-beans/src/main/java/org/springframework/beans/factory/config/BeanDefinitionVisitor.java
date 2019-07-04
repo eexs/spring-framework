@@ -74,14 +74,19 @@ public class BeanDefinitionVisitor {
 	 * and ConstructorArgumentValues contained in them.
 	 * @param beanDefinition the BeanDefinition object to traverse
 	 * @see #resolveStringValue(String)
+	 *
+	 * 我们可以看到该方法基本访问了 BeanDefinition 中所有值得访问的东西了，
+	 * 包括 parent 、class 、factory-bean 、factory-method 、scope 、property 、constructor-arg 。
 	 */
 	public void visitBeanDefinition(BeanDefinition beanDefinition) {
+		//解析<bean>定义中的parent、class、factory-bean、factory-method、scope、property、constructor-arg属性
 		visitParentName(beanDefinition);
 		visitBeanClassName(beanDefinition);
 		visitFactoryBeanName(beanDefinition);
 		visitFactoryMethodName(beanDefinition);
 		visitScope(beanDefinition);
 		if (beanDefinition.hasPropertyValues()) {
+			//解析property属性占位符 (比如<property name="name" value="${name}" />)
 			visitPropertyValues(beanDefinition.getPropertyValues());
 		}
 		if (beanDefinition.hasConstructorArgumentValues()) {
@@ -142,10 +147,14 @@ public class BeanDefinitionVisitor {
 	}
 
 	protected void visitPropertyValues(MutablePropertyValues pvs) {
+		//过程就是对属性数组进行遍历，调用 #resolveValue(Object value)方法，对属性进行解析获取最新值，如果新值和旧值不等，则用新值替换旧值。
 		PropertyValue[] pvArray = pvs.getPropertyValues();
+		// 遍历 PropertyValue 数组
 		for (PropertyValue pv : pvArray) {
+			// 解析真值
 			Object newVal = resolveValue(pv.getValue());
 			if (!ObjectUtils.nullSafeEquals(newVal, pv.getValue())) {
+				// 设置到 PropertyValue 中
 				pvs.add(pv.getName(), newVal);
 			}
 		}
@@ -214,11 +223,13 @@ public class BeanDefinitionVisitor {
 			TypedStringValue typedStringValue = (TypedStringValue) value;
 			String stringValue = typedStringValue.getValue();
 			if (stringValue != null) {
+				//解析占位符字符串
 				String visitedString = resolveStringValue(stringValue);
 				typedStringValue.setValue(visitedString);
 			}
 		}
 		else if (value instanceof String) {
+			//解析占位符字符串
 			return resolveStringValue((String) value);
 		}
 		return value;
@@ -293,6 +304,7 @@ public class BeanDefinitionVisitor {
 			throw new IllegalStateException("No StringValueResolver specified - pass a resolver " +
 					"object into the constructor or override the 'resolveStringValue' method");
 		}
+		// 解析真值 （valueResolver是构造时传入的PlaceholderResolvingStringValueResolver。）
 		String resolvedValue = this.valueResolver.resolveStringValue(strVal);
 		// Return original String if not modified.
 		return (strVal.equals(resolvedValue) ? strVal : resolvedValue);

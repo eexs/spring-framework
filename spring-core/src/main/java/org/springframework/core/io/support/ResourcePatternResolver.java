@@ -50,6 +50,10 @@ import org.springframework.core.io.ResourceLoader;
  * @see org.springframework.core.io.ResourceLoader
  * @see org.springframework.context.ApplicationContext
  * @see org.springframework.context.ResourceLoaderAware
+ *
+ * ResourcePatternResolver 接口继承 ResourceLoader 接口，为将 location 解析为 Resource 对象的策略接口。
+ * 他提供的 #getResources(String locationPattern) 方法，在 AbstractApplicationContext 中实现，
+ * 在 AbstractApplicationContext 中他持有一个 ResourcePatternResolver 的实例对象。
  */
 public interface ResourcePatternResolver extends ResourceLoader {
 

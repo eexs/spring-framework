@@ -36,6 +36,10 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @see org.springframework.context.support.ResourceBundleMessageSource
  * @see org.springframework.context.support.ReloadableResourceBundleMessageSource
+ *
+ * MessageSource 定义了获取 message 的策略方法 #getMessage(...) 。
+ * 在 ApplicationContext 体系中，该方法由 AbstractApplicationContext 实现。
+ * 在 AbstractApplicationContext 中，它持有一个 MessageSource 实例，将 #getMessage(...) 方法委托给该实例来实现
  */
 public interface MessageSource {
 

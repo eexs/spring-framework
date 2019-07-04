@@ -167,7 +167,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 
 	/**
 	 * Obtain a lazily initialized CachedIntrospectionResults instance
-	 * for the wrapped object.
+	 * for the wrapped object.0
 	 */
 	private CachedIntrospectionResults getCachedIntrospectionResults() {
 		if (this.cachedIntrospectionResults == null) {

@@ -126,6 +126,7 @@ class TypeConverterDelegate {
 			TypeDescriptor sourceTypeDesc = TypeDescriptor.forObject(newValue);
 			if (conversionService.canConvert(sourceTypeDesc, typeDescriptor)) {
 				try {
+					// 如果没有自定义的编辑器则使用 ConversionService 进行转换。
 					return (T) conversionService.convert(newValue, sourceTypeDesc, typeDescriptor);
 				}
 				catch (ConversionFailedException ex) {

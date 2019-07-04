@@ -37,6 +37,7 @@ abstract class ConversionUtils {
 			TypeDescriptor sourceType, TypeDescriptor targetType) {
 
 		try {
+			// 【重要】在这里，我们看到执行转换。
 			return converter.convert(source, sourceType, targetType);
 		}
 		catch (ConversionFailedException ex) {

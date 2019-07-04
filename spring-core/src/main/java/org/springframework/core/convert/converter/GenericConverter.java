@@ -44,6 +44,8 @@ import org.springframework.util.Assert;
  * @see Converter
  * @see ConverterFactory
  * @see ConditionalConverter
+ *
+ * 会根据源类对象及目标类对象所在的宿主类中的上下文信息进行类型转换。
  */
 public interface GenericConverter {
 

@@ -37,6 +37,8 @@ import org.springframework.lang.Nullable;
  * @see #refresh
  * @see ContextLoader#createWebApplicationContext
  * @see org.springframework.web.servlet.FrameworkServlet#createWebApplicationContext
+ *
+ * 该接口将这 WebApplicationContext，ConfigurableApplicationContext 这两个接口进行合并，提供了一个可配置、可管理、可关闭的 WebApplicationContext
  */
 public interface ConfigurableWebApplicationContext extends WebApplicationContext, ConfigurableApplicationContext {
 

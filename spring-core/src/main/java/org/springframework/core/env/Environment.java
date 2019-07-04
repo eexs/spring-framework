@@ -82,6 +82,8 @@ public interface Environment extends PropertyResolver {
 	 * @see #getDefaultProfiles
 	 * @see ConfigurableEnvironment#setActiveProfiles
 	 * @see AbstractEnvironment#ACTIVE_PROFILES_PROPERTY_NAME
+	 *
+	 * 返回此环境下激活的配置文件集
 	 */
 	String[] getActiveProfiles();
 
@@ -91,6 +93,8 @@ public interface Environment extends PropertyResolver {
 	 * @see #getActiveProfiles
 	 * @see ConfigurableEnvironment#setDefaultProfiles
 	 * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME
+	 *
+	 * 如果未设置激活配置文件，则返回默认的激活的配置文件集
 	 */
 	String[] getDefaultProfiles();
 

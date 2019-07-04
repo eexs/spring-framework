@@ -77,13 +77,27 @@ public class DelegatingEntityResolver implements EntityResolver {
 	}
 
 
+	/**
+	 * publicId ：被引用的外部实体的公共标识符，如果没有提供，则返回 null 。
+	 * systemId ：被引用的外部实体的系统标识符。
+	 *
+	 * 这两个参数的实际内容和具体的验证模式的关系如下：
+	 * XSD 验证模式
+	 * 	publicId：null
+	 * 	systemId：http://www.springframework.org/schema/beans/spring-beans.xsd
+	 * DTD 验证模式
+	 * 	publicId：-//SPRING//DTD BEAN 2.0//EN
+	 * 	systemId：http://www.springframework.org/dtd/spring-beans.dtd
+	 */
 	@Override
 	@Nullable
 	public InputSource resolveEntity(String publicId, @Nullable String systemId) throws SAXException, IOException {
 		if (systemId != null) {
+			// 如果是 DTD 验证模式，则使用 BeansDtdResolver 来进行解析
 			if (systemId.endsWith(DTD_SUFFIX)) {
 				return this.dtdResolver.resolveEntity(publicId, systemId);
 			}
+			// 如果是 XSD 验证模式，则使用 PluggableSchemaResolver 来进行解析。
 			else if (systemId.endsWith(XSD_SUFFIX)) {
 				return this.schemaResolver.resolveEntity(publicId, systemId);
 			}
