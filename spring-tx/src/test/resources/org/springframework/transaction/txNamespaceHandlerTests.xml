@@ -7,8 +7,12 @@
 				http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
 				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
+	<!-- 修改过的配置 ：用于触发 AnnotationDrivenBeanDefinitionParser 的调试 -->
+	<tx:annotation-driven proxy-target-class="false" order="0" />
+
 	<aop:config>
-		<aop:advisor pointcut="execution(* *..ITestBean.*(..))" advice-ref="txAdvice"/>
+		<!-- 修改过的配置 ：增加 order="1" -->
+		<aop:advisor pointcut="execution(* *..ITestBean.*(..))" advice-ref="txAdvice" order="1" />
 	</aop:config>
 
 	<tx:advice id="txAdvice">
@@ -29,5 +33,8 @@
 	<bean id="transactionManager" class="org.springframework.tests.transaction.CallCountingTransactionManager"/>
 
 	<bean id="testBean" class="org.springframework.tests.sample.beans.TestBean"/>
+
+	<!-- 修改过的配置 ：增加 TestBean2 的声明  -->
+	<bean id="testBean2" class="org.springframework.transaction.AmazarashiTestBean2" />
 
 </beans>
