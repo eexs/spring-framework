@@ -1,11 +1,9 @@
 package org.springframework.transaction;
 
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.tests.sample.beans.TestBean;
 import org.springframework.transaction.annotation.Transactional;
 
-public class AmazarashiTestBean2 extends TestBean implements ApplicationListener<ApplicationEvent> {
+public class AmazarashiTestBean2 extends TestBean  {
 
     @Override
     @Transactional // <2>
@@ -18,8 +16,4 @@ public class AmazarashiTestBean2 extends TestBean implements ApplicationListener
 		return "amazarashiTestBean2";
 	}
 
-	@Override
-	public void onApplicationEvent(ApplicationEvent event) {
-		System.out.println(event);
-	}
 }
