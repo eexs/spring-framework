@@ -99,6 +99,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 					}
 				}
 			}
+			//引介增强处理
 			else if (advisor instanceof IntroductionAdvisor) {
 				IntroductionAdvisor ia = (IntroductionAdvisor) advisor;
 				// IntroductionAdvisor 类型的通知器，仅需进行类级别的匹配即可

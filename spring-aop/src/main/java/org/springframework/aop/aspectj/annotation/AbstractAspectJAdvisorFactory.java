@@ -81,6 +81,7 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 	}
 
 	private boolean hasAspectAnnotation(Class<?> clazz) {
+		//判定当前类是否有 Aspect 注解，如果有，则不能被代理
 		return (AnnotationUtils.findAnnotation(clazz, Aspect.class) != null);
 	}
 
@@ -130,7 +131,9 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected static AspectJAnnotation<?> findAspectJAnnotationOnMethod(Method method) {
+		////如果方法中有 ASPECTJ_ANNOTATION_CLASSES 中任何一种注解，则返回该注解
 		for (Class<?> clazz : ASPECTJ_ANNOTATION_CLASSES) {
+			//寻找过程（通过方法的注解判断）
 			AspectJAnnotation<?> foundAnnotation = findAnnotation(method, (Class<Annotation>) clazz);
 			if (foundAnnotation != null) {
 				return foundAnnotation;

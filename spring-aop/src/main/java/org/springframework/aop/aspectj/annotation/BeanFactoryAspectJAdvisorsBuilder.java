@@ -89,9 +89,11 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 				if (aspectNames == null) {
 					List<Advisor> advisors = new ArrayList<>();
 					aspectNames = new ArrayList<>();
+					//获取所有beanNames
 					String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 							this.beanFactory, Object.class, true, false);
 					for (String beanName : beanNames) {
+						//判断是否满足子标签<aop:include/>的配置条件
 						if (!isEligibleBean(beanName)) {
 							continue;
 						}
@@ -101,21 +103,27 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 						if (beanType == null) {
 							continue;
 						}
+						//判断是否是Aspect注解
 						if (this.advisorFactory.isAspect(beanType)) {
 							aspectNames.add(beanName);
 							AspectMetadata amd = new AspectMetadata(beanType, beanName);
+							//单例
 							if (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) {
 								MetadataAwareAspectInstanceFactory factory =
 										new BeanFactoryAspectInstanceFactory(this.beanFactory, beanName);
+								//获取增强器
 								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);
 								if (this.beanFactory.isSingleton(beanName)) {
 									this.advisorsCache.put(beanName, classAdvisors);
 								}
+								//放入缓存中
 								else {
 									this.aspectFactoryCache.put(beanName, factory);
 								}
+								//加入list返回
 								advisors.addAll(classAdvisors);
 							}
+							//原型
 							else {
 								// Per target or per this.
 								if (this.beanFactory.isSingleton(beanName)) {
@@ -129,6 +137,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 							}
 						}
 					}
+					//缓存名称
 					this.aspectBeanNames = aspectNames;
 					return advisors;
 				}

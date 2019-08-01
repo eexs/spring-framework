@@ -120,18 +120,23 @@ public abstract class AopConfigUtils {
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 
+		//如果已经存在代理创建器 org.springframework.aop.config.internalAutoProxyCreator 直接使用
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
 			BeanDefinition apcDefinition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
+			//判断已存在的代理创建器和本次要注册的代理创建器是否是相同的
 			if (!cls.getName().equals(apcDefinition.getBeanClassName())) {
 				int currentPriority = findPriorityForClass(apcDefinition.getBeanClassName());
 				int requiredPriority = findPriorityForClass(cls);
+				//判断优先级，使用优先级高的代理创建器 (优先级的判断就是根据类在APC_PRIORITY_LIST中的索引值来判断的。索引值越小的优先级越高)
 				if (currentPriority < requiredPriority) {
 					apcDefinition.setBeanClassName(cls.getName());
 				}
 			}
+			//如果是相同的直接返回，无需再次注册
 			return null;
 		}
 
+		//不存在则注册代理创建器
 		RootBeanDefinition beanDefinition = new RootBeanDefinition(cls);
 		beanDefinition.setSource(source);
 		beanDefinition.getPropertyValues().add("order", Ordered.HIGHEST_PRECEDENCE);
