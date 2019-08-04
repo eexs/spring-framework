@@ -200,7 +200,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					// <1> 如果该节点使用默认命名空间，执行默认解析
-					//这里讲将对默认命名空间（http://www.springframework.org/schema/beans）下的标签节点（bean、import、alias等）进行处理
+					//这里讲将对默认命名空间（http://www.springframework.org/schema/beans）下的标签节点（bean、import、alias、beans）进行处理
 					if (delegate.isDefaultNamespace(ele)) {
 						parseDefaultElement(ele, delegate);
 					}
@@ -363,6 +363,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
 			// <2> 进行自定义标签处理 （如果有自定义属性的话，进行相应的解析）
+			// 这里我们提到的自定义标签是子标签，也就是说它是作为bean的属性存在的
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// <3> 进行 BeanDefinition 的注册

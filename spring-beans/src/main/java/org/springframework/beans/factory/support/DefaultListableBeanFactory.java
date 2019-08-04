@@ -819,12 +819,15 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		// Iterate over a copy to allow for init methods which in turn register new bean definitions.
 		// While this may not be part of the regular factory bootstrap, it does otherwise work fine.
+		//获取所有beanName
 		List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
 
 		// Trigger initialization of all non-lazy singleton beans...
 		for (String beanName : beanNames) {
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
+			//非abstract、非lazy-init的单例bean
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
+				//FactoryBean的处理
 				if (isFactoryBean(beanName)) {
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
 					if (bean instanceof FactoryBean) {
@@ -840,17 +843,21 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 									((SmartFactoryBean<?>) factory).isEagerInit());
 						}
 						if (isEagerInit) {
+							//初始化
 							getBean(beanName);
 						}
 					}
 				}
 				else {
+					//普通bean初始化
 					getBean(beanName);
 				}
 			}
 		}
 
 		// Trigger post-initialization callback for all applicable beans...
+		// 调用所有初始化的后的回调，Spring4.1的新特性，我们的bean实现了SmartInitializingSingleton后，
+		// 会在初始化后调用实现的afterSingletonsInstantiated方法，我们可以在里面定义一些bean初始化后需要的逻辑
 		for (String beanName : beanNames) {
 			Object singletonInstance = getSingleton(beanName);
 			if (singletonInstance instanceof SmartInitializingSingleton) {
@@ -885,6 +892,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		// 这是注册前的最后一次校验了，主要是对属性 methodOverrides 进行校验。
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				// 这里校验的是我们在配置lookup-method和replaced-method时产生的MethodOverrides和factory-method是否同时存在，
+				// 同时存在会报错，并校验MethodOverrides中的方法是否真正存在
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {

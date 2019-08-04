@@ -251,7 +251,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
-			//判断当前bean是否可以被代理，然后存入advisedBeans
+			//判断当前bean是否可以被代理，如果不能被代理存入advisedBeans
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;

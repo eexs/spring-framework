@@ -113,12 +113,14 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 	 */
 	@Override
 	public void stop() {
+		// 实现了Lifecycle的bean处理 （实现了Lifecycle接口的bean，Spring会保证在启动时调用其start方法，在Spring关闭时调用其stop方法。）
 		stopBeans();
 		this.running = false;
 	}
 
 	@Override
 	public void onRefresh() {
+		// 实现了Lifecycle的bean处理 （实现了Lifecycle接口的bean，Spring会保证在启动时调用其start方法，在Spring关闭时调用其stop方法。）
 		startBeans(true);
 		this.running = true;
 	}

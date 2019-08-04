@@ -53,8 +53,9 @@ final class PostProcessorRegistrationDelegate {
 
 
 	/**
-	 * 此处逻辑就是对所有的 BeanDefinitionRegistryPostProcessors 、手动注册的 BeanFactoryPostProcessor
-	 * 以及通过配置文件方式的 BeanFactoryPostProcessor 按照 PriorityOrdered 、 Ordered、no ordered 三种方式分开处理、调用。
+	 * 此处逻辑就是对所有的 BeanDefinitionRegistryPostProcessors。
+	 * 手动注册的 BeanFactoryPostProcessor、以及通过配置文件方式的 BeanFactoryPostProcessor
+	 * 按照 PriorityOrdered 、 Ordered、no ordered 三种方式分开处理、调用。
 	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
@@ -229,12 +230,17 @@ final class PostProcessorRegistrationDelegate {
 		// a bean is not eligible for getting processed by all BeanPostProcessors.
 		// 记录所有的beanProcessor数量
 		int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
-		// 注册 BeanPostProcessorChecker，它主要是用于在 BeanPostProcessor 实例化期间记录日志
+		// 注册BeanPostProcessorChecker的作用是在BeanPostProcessor初始化期间有bean被创建了就会打印日志
 		// 当 Spring 中高配置的后置处理器还没有注册就已经开始了 bean 的实例化过程，这个时候便会打印 BeanPostProcessorChecker 中的内容
 		beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
 
 		// Separate between BeanPostProcessors that implement PriorityOrdered,
 		// Ordered, and the rest.
+		// 这里和BeanFactoryPostProcessor执行的过程非常相似，同样是按照PriorityOrdered --> Ordered --> 其他的顺序进行注册，
+		// 区别是这里最后加了MergedBeanDefinitionPostProcessor类型的BeanPostProcessor的注册，
+		// 并且这里不会执行相关方法，BeanPostProcessor的相关方法在bean创建时才会执行。这里看起来有重复注册的问题，
+		// 不过beanFactory.addBeanPostProcessor是先移除在添加，所以不会重复
+
 		// PriorityOrdered 保证顺序
 		List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
 		// MergedBeanDefinitionPostProcessor

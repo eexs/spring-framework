@@ -1454,6 +1454,7 @@ public class BeanDefinitionParserDelegate {
 
 	@Nullable
 	public BeanDefinition parseCustomElement(Element ele) {
+		//解析自定义元素
 		return parseCustomElement(ele, null);
 	}
 
@@ -1475,6 +1476,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	public BeanDefinitionHolder decorateBeanDefinitionIfRequired(Element ele, BeanDefinitionHolder definitionHolder) {
+		//如果子标签是自定义子标签，则需要按照自定义标签解析的形式进行修饰
 		return decorateBeanDefinitionIfRequired(ele, definitionHolder, null);
 	}
 
@@ -1491,7 +1493,7 @@ public class BeanDefinitionParserDelegate {
 			finalDefinition = decorateIfRequired(node, finalDefinition, containingBd);
 		}
 
-		// <2> 遍历子节点，查看是否有适用于修饰的【子节点】
+		// <2> 遍历子节点，查看是否有适用于装饰的【子节点】
 		// Decorate based on custom nested elements.
 		NodeList children = ele.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {

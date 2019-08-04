@@ -158,6 +158,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 	/**
 	 * Load the specified NamespaceHandler mappings lazily.
 	 */
+	//这里就是加载配置文件到内存中，而this.handlerMappingsLocation在调用构造方法初始化时被赋值为META-INF/Spring.handlers
 	private Map<String, Object> getHandlerMappings() {
 		// 双重检查锁，延迟加载
 		Map<String, Object> handlerMappings = this.handlerMappings;
@@ -175,7 +176,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 						if (logger.isTraceEnabled()) {
 							logger.trace("Loaded NamespaceHandler mappings: " + mappings);
 						}
-						// 初始化到 handlerMappings 中
+						// 初始化到 handlerMappings 缓存中
 						handlerMappings = new ConcurrentHashMap<>(mappings.size());
 						CollectionUtils.mergePropertiesIntoMap(mappings, handlerMappings);
 						this.handlerMappings = handlerMappings;

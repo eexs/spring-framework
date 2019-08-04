@@ -452,6 +452,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see DocumentLoader#loadDocument
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
+		// 这里会获取XML配置文件的验证模式，也就是验证XSD或者DTD，判断的依据就是配置文件的内容是否包含DOCTYPE，如果包含就是DTD，否则就是XSD。
+		// 获取Document就是解析XML的操作了，没有什么特别的，这里有必要提一下EntityResolver，在校验XML时，首先需要读取XML文档声明获取DTD声明，
+		// 默认是通过网络进行下载DTD声明，网络下载比较慢而且存在中断的风险，EntityResolver就是用来帮助程序寻找DTD声明的，
+		// 根据用户声明校验模式的不同，在本地寻找并加载对应的DTD或XSD文件。
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
 				getValidationModeForResource(resource), isNamespaceAware());
 	}
