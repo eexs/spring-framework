@@ -43,6 +43,7 @@ public interface RequestCondition<T> {
 	 * @return a request condition instance that is the result of combining
 	 * the two condition instances.
 	 */
+	// 合并方法
 	T combine(T other);
 
 	/**
@@ -57,6 +58,7 @@ public interface RequestCondition<T> {
 	 * empty content thus not causing a failure to match.
 	 * @return a condition instance in case of a match or {@code null} otherwise.
 	 */
+	// 匹配方法
 	@Nullable
 	T getMatchingCondition(HttpServletRequest request);
 
@@ -66,6 +68,7 @@ public interface RequestCondition<T> {
 	 * been obtained via {@link #getMatchingCondition(HttpServletRequest)}
 	 * to ensure they have content relevant to current request only.
 	 */
+	// 比较方法
 	int compareTo(T other, HttpServletRequest request);
 
 }
