@@ -91,6 +91,8 @@ public class SessionLocaleResolver extends AbstractLocaleContextResolver {
 	 * <p>The default is an internal {@link #LOCALE_SESSION_ATTRIBUTE_NAME}.
 	 * @since 4.3.8
 	 */
+	// 在 HttpSession 中指定相应属性的名称，保存当前的 Locale 值
+    // 默认值为 LOCALE_SESSION_ATTRIBUTE_NAME
 	public void setLocaleAttributeName(String localeAttributeName) {
 		this.localeAttributeName = localeAttributeName;
 	}
@@ -101,6 +103,8 @@ public class SessionLocaleResolver extends AbstractLocaleContextResolver {
 	 * <p>The default is an internal {@link #TIME_ZONE_SESSION_ATTRIBUTE_NAME}.
 	 * @since 4.3.8
 	 */
+	// 在 HttpSession 中指定相应属性的名称，保存当前的 TimeZone 值
+	// 默认值为 TIME_ZONE_SESSION_ATTRIBUTE_NAME
 	public void setTimeZoneAttributeName(String timeZoneAttributeName) {
 		this.timeZoneAttributeName = timeZoneAttributeName;
 	}
@@ -150,6 +154,7 @@ public class SessionLocaleResolver extends AbstractLocaleContextResolver {
 				timeZone = ((TimeZoneAwareLocaleContext) localeContext).getTimeZone();
 			}
 		}
+		// 将 Locale 与 TimeZone 保存到 HttpSession
 		WebUtils.setSessionAttribute(request, this.localeAttributeName, locale);
 		WebUtils.setSessionAttribute(request, this.timeZoneAttributeName, timeZone);
 	}
@@ -165,6 +170,8 @@ public class SessionLocaleResolver extends AbstractLocaleContextResolver {
 	 * @see #setDefaultLocale
 	 * @see javax.servlet.http.HttpServletRequest#getLocale()
 	 */
+	// 确定给定请求的默认语言环境，如果没有找到 Locale 会话属性，则调用
+	// 默认实现返回指定的默认语言环境（如果有的话）返回到请求的Accept-Header 语言环境
 	protected Locale determineDefaultLocale(HttpServletRequest request) {
 		Locale defaultLocale = getDefaultLocale();
 		if (defaultLocale == null) {
@@ -182,6 +189,8 @@ public class SessionLocaleResolver extends AbstractLocaleContextResolver {
 	 * @return the default time zone (or {@code null} if none defined)
 	 * @see #setDefaultTimeZone
 	 */
+	// 确定给定请求的默认时区，如果未找到TimeZone会话属性，则调用
+	// 默认实现返回指定的默认时区（如果有），否则返回null
 	@Nullable
 	protected TimeZone determineDefaultTimeZone(HttpServletRequest request) {
 		return getDefaultTimeZone();

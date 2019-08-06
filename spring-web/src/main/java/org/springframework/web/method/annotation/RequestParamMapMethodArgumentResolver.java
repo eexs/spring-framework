@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -57,6 +58,25 @@ import org.springframework.web.multipart.support.MultipartResolutionDelegate;
  * @see MultipartRequest#getMultiFileMap()
  * @see MultipartRequest#getFileMap()
  */
+// 处理带有 @RequestParam 注解，但是注解上无 name 属性的 Map 类型的参数的 RequestParamMethodArgumentResolver 实现类。
+//
+// ① 对于 RequestParamMapMethodArgumentResolver 类，它的效果是，将所有参数添加到 Map 集合中。示例如下：
+//Controller.java
+//@RequestMapping("/hello4")
+//public String hello4(@RequestParam Map<String, Object> map) {
+//		return "666";
+//}
+//GET /hello4?name=yyy&age=20 的 name 和 age 参数，就会都添加到 map 中。
+//
+// ② 对于 RequestParamMethodArgumentResolver 类，它的效果是，将指定名字的参数添加到 Map 集合中。示例如下：
+//Controller.java
+//@RequestMapping("/hello5")
+//public String hello5(@RequestParam(name = "map") Map<String, Object> map) {
+//		return "666";
+//}
+//
+//GET /hello4?map={"name": "yyyy", age: 20} 的 map 参数，就会都添加到 map 中。当然，要注意下，实际请求要 UrlEncode 编码下参数，
+// 所以实际请求是 GET /hello4?map=%7b%22name%22%3a+%22yyyy%22%2c+age%3a+20%7d 。
 public class RequestParamMapMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
 	@Override

@@ -42,8 +42,11 @@ import org.springframework.web.servlet.RequestToViewNameTranslator;
  * @author Juergen Hoeller
  * @since 3.1
  */
+// 实现 HandlerMethodReturnValueHandler 接口，处理返回结果是视图名的 ReturnValueHandler 实现类。
+// ViewNameMethodReturnValueHandler 适用于前后端未分离，Controller 返回视图名的场景，例如 JSP、Freemarker 等等。
 public class ViewNameMethodReturnValueHandler implements HandlerMethodReturnValueHandler {
 
+	// 重定向的表达式的数组
 	@Nullable
 	private String[] redirectPatterns;
 
@@ -80,13 +83,17 @@ public class ViewNameMethodReturnValueHandler implements HandlerMethodReturnValu
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
+		// 如果是 String 类型
 		if (returnValue instanceof CharSequence) {
+			// 设置视图名到 mavContainer 中
 			String viewName = returnValue.toString();
 			mavContainer.setViewName(viewName);
+			// 如果是重定向，则标记到 mavContainer 中
 			if (isRedirectViewName(viewName)) {
 				mavContainer.setRedirectModelScenario(true);
 			}
 		}
+		// 如果是非 String 类型，而且非 void ，则抛出 UnsupportedOperationException 异常
 		else if (returnValue != null){
 			// should not happen
 			throw new UnsupportedOperationException("Unexpected return type: " +
@@ -103,7 +110,8 @@ public class ViewNameMethodReturnValueHandler implements HandlerMethodReturnValu
 	 * reference; "false" otherwise.
 	 */
 	protected boolean isRedirectViewName(String viewName) {
-		return (PatternMatchUtils.simpleMatch(this.redirectPatterns, viewName) || viewName.startsWith("redirect:"));
+		return (PatternMatchUtils.simpleMatch(this.redirectPatterns, viewName) // 符合 redirectPatterns 表达式
+				|| viewName.startsWith("redirect:")); // 以 redirect: 开头
 	}
 
 }
