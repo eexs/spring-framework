@@ -57,6 +57,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMappi
  * @author Sam Brannen
  * @since 3.1
  */
+// 基于 @RequestMapping 注解来构建 RequestMappingInfo 对象。
 public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMapping
 		implements MatchableHandlerMapping, EmbeddedValueResolverAware {
 

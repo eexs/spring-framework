@@ -54,6 +54,7 @@ import org.springframework.web.util.WebUtils;
  * @author Rossen Stoyanchev
  * @since 3.1
  */
+//定义了使用 RequestMappingInfo 对象
 public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMethodMapping<RequestMappingInfo> {
 
 	private static final Method HTTP_OPTIONS_HANDLE_METHOD;
