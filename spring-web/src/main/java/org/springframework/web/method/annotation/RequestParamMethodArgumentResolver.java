@@ -181,6 +181,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 		}
 
 		// 情况二，MultipartHttpServletRequest 情况下的 MultipartFile 的情况
+		// (处理参数类型为文件 org.springframework.web.multipart.MultipartFile 和 javax.servlet.http.Part 的参数的获取。)
 		Object arg = null;
 		MultipartRequest multipartRequest = request.getNativeRequest(MultipartRequest.class);
 		if (multipartRequest != null) {
